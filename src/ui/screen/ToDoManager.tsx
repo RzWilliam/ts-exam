@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { Task, Priority, Status } from './types';
-import ToDoList from './ToDoList';
+import React, { useState } from "react";
+import { Task, Priority, Status } from "../../model/types";
+import ToDoList from "../component/ToDoList";
 
 const ToDoManager: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [newTaskDescription, setNewTaskDescription] = useState('');
-  const [newTaskPriority, setNewTaskPriority] = useState<Priority>(Priority.Low);
+  const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [newTaskDescription, setNewTaskDescription] = useState("");
+  const [newTaskPriority, setNewTaskPriority] = useState<Priority>(
+    Priority.Low
+  );
   const [newTaskStatus, setNewTaskStatus] = useState<Status>(Status.ToDo);
   const [newTaskDueDate, setNewTaskDueDate] = useState<Date>(new Date());
 
@@ -17,27 +19,27 @@ const ToDoManager: React.FC = () => {
       description: newTaskDescription,
       priority: newTaskPriority,
       status: newTaskStatus,
-      dueDate: newTaskDueDate
+      dueDate: newTaskDueDate,
     };
     setTasks([...tasks, newTask]);
     resetForm();
   };
 
   const updateTask = (taskId: number, updatedTask: Task) => {
-    const updatedTasks = tasks.map(task =>
+    const updatedTasks = tasks.map((task) =>
       task.id === taskId ? updatedTask : task
     );
     setTasks(updatedTasks);
   };
 
   const deleteTask = (taskId: number) => {
-    const updatedTasks = tasks.filter(task => task.id !== taskId);
+    const updatedTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(updatedTasks);
   };
 
   const resetForm = () => {
-    setNewTaskTitle('');
-    setNewTaskDescription('');
+    setNewTaskTitle("");
+    setNewTaskDescription("");
     setNewTaskPriority(Priority.Low);
     setNewTaskStatus(Status.ToDo);
     setNewTaskDueDate(new Date());
@@ -48,15 +50,26 @@ const ToDoManager: React.FC = () => {
       <h2>ToDo List</h2>
       <div>
         <label>Title:</label>
-        <input type="text" value={newTaskTitle} onChange={e => setNewTaskTitle(e.target.value)} />
+        <input
+          type="text"
+          value={newTaskTitle}
+          onChange={(e) => setNewTaskTitle(e.target.value)}
+        />
       </div>
       <div>
         <label>Description:</label>
-        <input type="text" value={newTaskDescription} onChange={e => setNewTaskDescription(e.target.value)} />
+        <input
+          type="text"
+          value={newTaskDescription}
+          onChange={(e) => setNewTaskDescription(e.target.value)}
+        />
       </div>
       <div>
         <label>Priority:</label>
-        <select value={newTaskPriority} onChange={e => setNewTaskPriority(Number(e.target.value))}>
+        <select
+          value={newTaskPriority}
+          onChange={(e) => setNewTaskPriority(Number(e.target.value))}
+        >
           <option value={Priority.Low}>Low</option>
           <option value={Priority.Medium}>Medium</option>
           <option value={Priority.High}>High</option>
@@ -64,7 +77,11 @@ const ToDoManager: React.FC = () => {
       </div>
       <div>
         <label>Due Date:</label>
-        <input type="date" value={newTaskDueDate.toISOString().split('T')[0]} onChange={e => setNewTaskDueDate(new Date(e.target.value))} />
+        <input
+          type="date"
+          value={newTaskDueDate.toISOString().split("T")[0]}
+          onChange={(e) => setNewTaskDueDate(new Date(e.target.value))}
+        />
       </div>
       <button onClick={addTask}>Add Task</button>
 

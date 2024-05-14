@@ -1,5 +1,5 @@
 import React from "react";
-import { Task, Priority, Status } from "./types";
+import { Task, Priority, Status } from "../../model/types";
 
 type Props = {
   task: Task;
@@ -8,7 +8,7 @@ type Props = {
 };
 
 const ToDoItem: React.FC<Props> = ({ task, updateTask, deleteTask }) => {
-    console
+  console;
   return (
     <tr>
       <td>{task.id}</td>
