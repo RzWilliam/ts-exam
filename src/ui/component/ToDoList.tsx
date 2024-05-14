@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Task } from './types';
-import ToDoItem from './ToDoItem';
+import React, { useState } from "react";
+import { Task } from "../../model/types";
+import ToDoItem from "./ToDoItem";
 
 type Props = {
   tasks: Task[];
@@ -9,9 +9,9 @@ type Props = {
 };
 
 const ToDoList: React.FC<Props> = ({ tasks, updateTask, deleteTask }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredTasks = tasks.filter(task => {
+  const filteredTasks = tasks.filter((task) => {
     return (
       task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       task.description.toLowerCase().includes(searchTerm.toLowerCase())
@@ -20,7 +20,12 @@ const ToDoList: React.FC<Props> = ({ tasks, updateTask, deleteTask }) => {
 
   return (
     <div>
-      <input type="text" placeholder="Search tasks..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+      <input
+        type="text"
+        placeholder="Search tasks..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
       <table>
         <thead>
           <tr>
@@ -34,8 +39,13 @@ const ToDoList: React.FC<Props> = ({ tasks, updateTask, deleteTask }) => {
           </tr>
         </thead>
         <tbody>
-          {filteredTasks.map(task => (
-            <ToDoItem key={task.id} task={task} updateTask={updateTask} deleteTask={deleteTask} />
+          {filteredTasks.map((task) => (
+            <ToDoItem
+              key={task.id}
+              task={task}
+              updateTask={updateTask}
+              deleteTask={deleteTask}
+            />
           ))}
         </tbody>
       </table>
