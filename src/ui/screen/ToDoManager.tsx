@@ -22,6 +22,7 @@ const ToDoManager: React.FC = () => {
       dueDate: newTaskDueDate,
     };
     setTasks([...tasks, newTask]);
+    localStorage.setItem(newTask.id.toString(), JSON.stringify({ ...tasks,newTask }));
     resetForm();
   };
 
@@ -30,12 +31,16 @@ const ToDoManager: React.FC = () => {
       task.id === taskId ? updatedTask : task
     );
     setTasks(updatedTasks);
+    localStorage.setItem(taskId.toString(), JSON.stringify({ ...updatedTask, status: 1 }));
   };
+  
 
   const deleteTask = (taskId: number) => {
-    const updatedTasks = tasks.filter((task) => task.id !== taskId);
+    const updatedTasks = tasks.filter(task => task.id !== taskId);
+    localStorage.removeItem(taskId.toString()); 
     setTasks(updatedTasks);
   };
+  
 
   const resetForm = () => {
     setNewTaskTitle("");
