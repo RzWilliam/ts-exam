@@ -14,7 +14,7 @@ const ToDoItem: React.FC<Props> = ({ task, updateTask, deleteTask }) => {
 
   const handleComplete = () => {
     updateTask(task.id, { ...task, status: 2 }); // Update status to 'Done'
-    localStorage.setItem(task.id.toString(), JSON.stringify({ ...task, status: 2 }));
+    localStorage.setItem("tasks", JSON.stringify({ ...task, status: 2 }));
   };
 
   const handleDelete = () => {

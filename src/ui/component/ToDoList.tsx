@@ -10,7 +10,7 @@ type Props = {
 
 const ToDoList: React.FC<Props> = ({ tasks, updateTask, deleteTask }) => {
   const [searchTerm, setSearchTerm] = useState("");
-
+  
   const filteredTasks = tasks.filter((task) => {
     return (
       task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
