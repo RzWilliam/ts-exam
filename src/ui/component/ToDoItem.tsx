@@ -28,7 +28,7 @@ const ToDoItem: React.FC<Props> = ({ task, updateTask, deleteTask }) => {
       <td>{task.description}</td>
       <td>{Priority[task.priority]}</td>
       <td>{Status[task.status]}</td>
-      <td>{task.dueDate ? task.dueDate.toLocaleDateString() : "No due date"}</td>
+      <td>{task.dueDate ? `${task.dueDate.day}/${task.dueDate.month}/${task.dueDate.year} ${task.dueDate.hour}:${task.dueDate.minute}` : "No due date"}</td>
       <td>
         {task.status === 0 && (
           <button onClick={handleStart}>Start</button>

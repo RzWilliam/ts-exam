@@ -10,14 +10,22 @@ enum Status {
   Done,
 }
 
+type CustomDate = {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+}
+
 interface Task {
   id: number;
   title: string;
   description: string;
   priority: Priority;
   status: Status;
-  dueDate: Date;
+  dueDate: CustomDate;
 }
 
 export { Priority, Status };
-export type { Task };
+export type { Task, CustomDate };

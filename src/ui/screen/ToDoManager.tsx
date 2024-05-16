@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-import { Task, Priority, Status } from "../../model/types";
+import { Task, Priority, Status, CustomDate } from "../../model/types";
 import ToDoList from "../component/ToDoList";
+
+const initialDate: CustomDate = {
+  year: new Date().getFullYear(),
+  month: new Date().getMonth(),
+  day: new Date().getDate(),
+  hour: new Date().getHours(),
+  minute: new Date().getMinutes()
+};
 
 const ToDoManager: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -10,7 +18,7 @@ const ToDoManager: React.FC = () => {
     Priority.Low
   );
   const [newTaskStatus, setNewTaskStatus] = useState<Status>(Status.ToDo);
-  const [newTaskDueDate, setNewTaskDueDate] = useState<Date>(new Date());
+  const [newTaskDueDate, setNewTaskDueDate] = useState<CustomDate>(initialDate);
 
   const addTask = () => {
     const newTask: Task = {
@@ -47,7 +55,7 @@ const ToDoManager: React.FC = () => {
     setNewTaskDescription("");
     setNewTaskPriority(Priority.Low);
     setNewTaskStatus(Status.ToDo);
-    setNewTaskDueDate(new Date());
+    setNewTaskDueDate(initialDate);
   };
 
   return (
@@ -83,10 +91,19 @@ const ToDoManager: React.FC = () => {
       <div>
         <label>Due Date:</label>
         <input
-          type="date"
-          value={newTaskDueDate.toISOString().split("T")[0]}
-          onChange={(e) => setNewTaskDueDate(new Date(e.target.value))}
+          type="datetime-local"
+          value={`${newTaskDueDate.year.toString().padStart(4, '0')}-${(newTaskDueDate.month + 1).toString().padStart(2, '0')}-${newTaskDueDate.day.toString().padStart(2, '0')}T${newTaskDueDate.hour.toString().padStart(2, '0')}:${newTaskDueDate.minute.toString().padStart(2, '0')}`}
+          onChange={(e) => {
+            const value = e.target.value;
+            const year = parseInt(value.slice(0, 4));
+            const month = parseInt(value.slice(5, 7)) - 1;
+            const day = parseInt(value.slice(8, 10));
+            const hour = parseInt(value.slice(11, 13));
+            const minute = parseInt(value.slice(14, 16));
+            setNewTaskDueDate({ year, month, day, hour, minute });
+          }}
         />
+
       </div>
       <button onClick={addTask}>Add Task</button>
 
