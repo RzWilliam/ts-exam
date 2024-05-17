@@ -4,11 +4,12 @@ import ToDoItem from "./ToDoItem";
 
 type Props = {
   tasks: Task[];
+  onEdit: (task: Task) => void;
   updateTask: (taskId: number, updatedTask: Task) => void;
   deleteTask: (taskId: number) => void;
 };
 
-const ToDoList: React.FC<Props> = ({ tasks, updateTask, deleteTask }) => {
+const ToDoList: React.FC<Props> = ({ tasks, onEdit, updateTask, deleteTask }) => {
   const [searchTerm, setSearchTerm] = useState("");
   
   const filteredTasks = tasks.filter((task) => {
@@ -43,6 +44,7 @@ const ToDoList: React.FC<Props> = ({ tasks, updateTask, deleteTask }) => {
             <ToDoItem
               key={task.id}
               task={task}
+              onEdit={onEdit}
               updateTask={updateTask}
               deleteTask={deleteTask}
             />

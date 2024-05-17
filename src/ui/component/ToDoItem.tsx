@@ -3,18 +3,18 @@ import { Task, Priority, Status } from "../../model/types";
 
 type Props = {
   task: Task;
+  onEdit: (task: Task) => void;
   updateTask: (taskId: number, updatedTask: Task) => void;
   deleteTask: (taskId: number) => void;
 };
 
-const ToDoItem: React.FC<Props> = ({ task, updateTask, deleteTask }) => {
+const ToDoItem: React.FC<Props> = ({ task, onEdit, updateTask, deleteTask }) => {
   const handleStart = () => {
     updateTask(task.id, { ...task, status: 1 }); // Update status to 'InProgress'
   };
 
   const handleComplete = () => {
     updateTask(task.id, { ...task, status: 2 }); // Update status to 'Done'
-    localStorage.setItem("tasks", JSON.stringify({ ...task, status: 2 }));
   };
 
   const handleDelete = () => {
@@ -37,6 +37,7 @@ const ToDoItem: React.FC<Props> = ({ task, updateTask, deleteTask }) => {
         {task.status === 1 && (
           <button onClick={handleComplete}>Complete</button>
         )}
+        <button onClick={() => onEdit(task)}>Edit</button>
         <button onClick={handleDelete}>Delete</button>
       </td>
     </tr>

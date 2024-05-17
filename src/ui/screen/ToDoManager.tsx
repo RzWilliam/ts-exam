@@ -14,11 +14,10 @@ const ToDoManager: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newTaskDescription, setNewTaskDescription] = useState("");
-  const [newTaskPriority, setNewTaskPriority] = useState<Priority>(
-    Priority.Low
-  );
+  const [newTaskPriority, setNewTaskPriority] = useState<Priority>(Priority.Low);
   const [newTaskStatus, setNewTaskStatus] = useState<Status>(Status.ToDo);
   const [newTaskDueDate, setNewTaskDueDate] = useState<CustomDate>(initialDate);
+  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
 
   useEffect(() => {
     const storedTasks = localStorage.getItem('tasks');
@@ -59,30 +58,46 @@ const ToDoManager: React.FC = () => {
     resetForm();
   };
 
-  const updateTask = (taskId: number, updatedTask: Task) => {
-    const storedTasks = localStorage.getItem("tasks");
-    if (storedTasks) {
-      const tasksArray = JSON.parse(storedTasks) as Task[];
-      const updatedTasks = tasksArray.map((task) =>
-        task.id === taskId ? updatedTask : task
-      );
-      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+  const startEditingTask = (task: Task) => {
+    setEditingTaskId(task.id);
+    setNewTaskTitle(task.title);
+    setNewTaskDescription(task.description);
+    setNewTaskPriority(task.priority);
+    setNewTaskStatus(task.status);
+    setNewTaskDueDate(task.dueDate);
+  };
 
-      setTasks(updatedTasks);
+  const updateTask = (taskId: number) => {
+    const updatedTask: Task = {
+      id: taskId,
+      title: newTaskTitle,
+      description: newTaskDescription,
+      priority: newTaskPriority,
+      status: newTaskStatus,
+      dueDate: newTaskDueDate,
+    };
+
+    const updatedTasks = tasks.map(task => 
+      task.id === taskId ? updatedTask : task
+    );
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    setTasks(updatedTasks);
+    resetForm();
+  };
+
+  const saveTask = () => {
+    if (editingTaskId !== null) {
+      updateTask(editingTaskId);
+    } else {
+      addTask();
     }
   };
-  
 
   const deleteTask = (taskId: number) => {
-    const storedTasks = localStorage.getItem("tasks");
-    if (storedTasks) {
-      const tasksArray = JSON.parse(storedTasks) as Task[];
-      const updatedTasks = tasksArray.filter((task) => task.id !== taskId);
-      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-      setTasks(updatedTasks);
-    }
+    const updatedTasks = tasks.filter(task => task.id !== taskId);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    setTasks(updatedTasks);
   };
-  
 
   const resetForm = () => {
     setNewTaskTitle("");
@@ -90,6 +105,7 @@ const ToDoManager: React.FC = () => {
     setNewTaskPriority(Priority.Low);
     setNewTaskStatus(Status.ToDo);
     setNewTaskDueDate(initialDate);
+    setEditingTaskId(null);
   };
 
   return (
@@ -137,14 +153,19 @@ const ToDoManager: React.FC = () => {
             setNewTaskDueDate({ year, month, day, hour, minute });
           }}
         />
-
       </div>
-      <button onClick={addTask}>Add Task</button>
+      <button onClick={saveTask}>{editingTaskId ? "Update Task" : "Add Task"}</button>
+      <button onClick={resetForm}>Cancel</button>
 
       <hr />
 
       <h3>Tasks</h3>
-      <ToDoList tasks={tasks} updateTask={updateTask} deleteTask={deleteTask} />
+      <ToDoList 
+        tasks={tasks} 
+        onEdit={startEditingTask} 
+        updateTask={updateTask}
+        deleteTask={deleteTask} 
+      />
     </div>
   );
 };
