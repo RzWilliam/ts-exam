@@ -1,31 +1,38 @@
-enum Priority {
+export enum Priority {
   Low,
   Medium,
   High,
 }
 
-enum Status {
+export enum Status {
   ToDo,
   InProgress,
   Done,
 }
 
-type CustomDate = {
+export type CustomDate = {
   year: number;
   month: number;
   day: number;
   hour: string;
   minute: string;
-}
+};
 
-interface Task {
+export const customDateToISOString = (date: CustomDate): string => {
+  const year = date.year.toString().padStart(4, '0');
+  const month = (date.month + 1).toString().padStart(2, '0'); // Months are 0-indexed
+  const day = date.day.toString().padStart(2, '0');
+  const hour = date.hour;
+  const minute = date.minute;
+
+  return `${year}-${month}-${day}T${hour}:${minute}`;
+};
+
+export type Task = {
   id: number;
   title: string;
   description: string;
   priority: Priority;
   status: Status;
   dueDate: CustomDate;
-}
-
-export { Priority, Status };
-export type { Task, CustomDate };
+};
