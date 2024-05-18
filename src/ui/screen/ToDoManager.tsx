@@ -29,18 +29,18 @@ const ToDoManager: React.FC = () => {
   const generateUniqueId = () => {
     const idCounter = localStorage.getItem("idCounter");
     let newId = 1;
-  
+
     if (idCounter) {
       newId = parseInt(idCounter) + 1;
     }
-  
+
     localStorage.setItem("idCounter", newId.toString());
     return newId;
   };
 
-  function minTwoDigits(n: number) : string {
+  const minTwoDigits = (n: number): string => {
     return (n < 10 ? '0' : '') + n;
-  }
+  };
 
   const addTask = () => {
     const newTask: Task = {
@@ -67,16 +67,7 @@ const ToDoManager: React.FC = () => {
     setNewTaskDueDate(task.dueDate);
   };
 
-  const updateTask = (taskId: number) => {
-    const updatedTask: Task = {
-      id: taskId,
-      title: newTaskTitle,
-      description: newTaskDescription,
-      priority: newTaskPriority,
-      status: newTaskStatus,
-      dueDate: newTaskDueDate,
-    };
-
+  const updateTask = (taskId: number, updatedTask: Task) => {
     const updatedTasks = tasks.map(task => 
       task.id === taskId ? updatedTask : task
     );
@@ -87,7 +78,15 @@ const ToDoManager: React.FC = () => {
 
   const saveTask = () => {
     if (editingTaskId !== null) {
-      updateTask(editingTaskId);
+      const updatedTask: Task = {
+        id: editingTaskId,
+        title: newTaskTitle,
+        description: newTaskDescription,
+        priority: newTaskPriority,
+        status: newTaskStatus,
+        dueDate: newTaskDueDate,
+      };
+      updateTask(editingTaskId, updatedTask);
     } else {
       addTask();
     }
@@ -109,7 +108,7 @@ const ToDoManager: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>ToDo List</h2>
       <div>
         <label>Title:</label>
@@ -131,7 +130,7 @@ const ToDoManager: React.FC = () => {
         <label>Priority:</label>
         <select
           value={newTaskPriority}
-          onChange={(e) => setNewTaskPriority(Number(e.target.value))}
+          onChange={(e) => setNewTaskPriority(Number(e.target.value) as Priority)}
         >
           <option value={Priority.Low}>Low</option>
           <option value={Priority.Medium}>Medium</option>
@@ -142,7 +141,7 @@ const ToDoManager: React.FC = () => {
         <label>Due Date:</label>
         <input
           type="datetime-local"
-          value={`${newTaskDueDate.year.toString().padStart(4, '0')}-${(newTaskDueDate.month + 1).toString().padStart(2, '0')}-${newTaskDueDate.day.toString().padStart(2, '0')}T${newTaskDueDate.hour.toString().padStart(2, '0')}:${newTaskDueDate.minute.toString().padStart(2, '0')}`}
+          value={`${newTaskDueDate.year.toString().padStart(4, '0')}-${(newTaskDueDate.month + 1).toString().padStart(2, '0')}-${newTaskDueDate.day.toString().padStart(2, '0')}T${newTaskDueDate.hour}:${newTaskDueDate.minute}`}
           onChange={(e) => {
             const value = e.target.value;
             const year = parseInt(value.slice(0, 4));
@@ -155,7 +154,7 @@ const ToDoManager: React.FC = () => {
         />
       </div>
       <button onClick={saveTask}>{editingTaskId ? "Update Task" : "Add Task"}</button>
-      <button onClick={resetForm}>Cancel</button>
+      <button onClick={resetForm} className="cancel">Cancel</button>
 
       <hr />
 

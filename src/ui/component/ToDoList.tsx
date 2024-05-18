@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Task } from "../../model/types";
+import { Task, Priority, Status } from "../../model/types";
 import ToDoItem from "./ToDoItem";
 
 type Props = {
@@ -11,22 +11,54 @@ type Props = {
 
 const ToDoList: React.FC<Props> = ({ tasks, onEdit, updateTask, deleteTask }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  
+  const [filterPriority, setFilterPriority] = useState<Priority | "">("");
+  const [filterStatus, setFilterStatus] = useState<Status | "">("");
+  const [filterDueDate, setFilterDueDate] = useState("");
+
   const filteredTasks = tasks.filter((task) => {
-    return (
-      task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const matchesSearchTerm = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesPriority = filterPriority === "" || task.priority === filterPriority;
+    const matchesStatus = filterStatus === "" || task.status === filterStatus;
+    const matchesDueDate = filterDueDate === "" || 
+      new Date(`${task.dueDate.year}-${task.dueDate.month + 1}-${task.dueDate.day}`).toISOString().split('T')[0] === filterDueDate;
+
+    return matchesSearchTerm && matchesPriority && matchesStatus && matchesDueDate;
   });
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Search tasks..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      <div className="filter-container">
+        <input
+          type="text"
+          placeholder="Search tasks..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select 
+          value={filterPriority} 
+          onChange={(e) => setFilterPriority(e.target.value === "" ? "" : Number(e.target.value))}
+        >
+          <option value="">All Priorities</option>
+          <option value={Priority.Low}>Low</option>
+          <option value={Priority.Medium}>Medium</option>
+          <option value={Priority.High}>High</option>
+        </select>
+        <select 
+          value={filterStatus} 
+          onChange={(e) => setFilterStatus(e.target.value === "" ? "" : Number(e.target.value))}
+        >
+          <option value="">All Statuses</option>
+          <option value={Status.ToDo}>To Do</option>
+          <option value={Status.InProgress}>In Progress</option>
+          <option value={Status.Done}>Done</option>
+        </select>
+        <input
+          type="date"
+          value={filterDueDate}
+          onChange={(e) => setFilterDueDate(e.target.value)}
+        />
+      </div>
       <table>
         <thead>
           <tr>
